@@ -3,565 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MarketFlow | Product Explorer with Checkout</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #f4f8fe 0%, #eef2f8 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .app-wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .app-container {
-            max-width: 1300px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            flex: 1;
-        }
-
-        /* Header Styles */
-        .brand-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: slideDown 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4f 100%);
-            padding: 1.8rem 2rem;
-            border-radius: 48px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .logo-icon {
-            font-size: 2.6rem;
-            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
-            animation: floatIcon 3s infinite ease;
-        }
-
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFE6B0, #FFD966, #FFC107);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .tagline {
-            color: #FFE0A3;
-            font-weight: 500;
-            font-size: 0.95rem;
-            margin-top: 8px;
-        }
-
-        /* Stats Banner */
-        .stats-banner {
-            background: linear-gradient(120deg, #1e2f44, #1a2a3c);
-            border-radius: 60px;
-            padding: 0.7rem 1.5rem;
-            margin-bottom: 2rem;
-            display: inline-flex;
-            width: auto;
-            margin-left: auto;
-            margin-right: auto;
-            justify-content: center;
-            color: white;
-            gap: 2rem;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
-        }
-        .stat-item {
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .stat-number {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: #ffd966;
-        }
-
-        /* Filter Panel */
-        .filter-panel {
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(16px);
-            border-radius: 80px;
-            padding: 0.7rem 1.5rem;
-            margin-bottom: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.7);
-        }
-
-        .filter-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            color: #1e2f3e;
-            background: #ffffffdd;
-            padding: 0.45rem 1.2rem;
-            border-radius: 60px;
-            font-size: 0.9rem;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background: #ffffffcc;
-            border: none;
-            padding: 0.6rem 1.6rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            color: #1f2e42;
-            font-family: inherit;
-        }
-
-        .filter-btn.active-filter {
-            background: #1e2f44;
-            color: white;
-            box-shadow: 0 8px 18px rgba(30,47,68,0.25);
-            transform: scale(0.97);
-        }
-
-        .filter-btn:hover:not(.active-filter) {
-            background: #e8edf4;
-            transform: translateY(-2px);
-        }
-
-        /* Product Card */
-        .product-stage {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .product-card {
-            position: relative;
-            background: #ffffff;
-            border-radius: 56px;
-            width: 100%;
-            max-width: 560px;
-            margin: 0 auto 2rem;
-            box-shadow: 0 30px 50px -18px rgba(0,0,0,0.25);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .card-inner {
-            padding: 2.2rem 2rem 2rem 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .product-media {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1.8rem;
-            background: linear-gradient(145deg, #f7f9fd, #edf2f8);
-            border-radius: 120px;
-            width: 150px;
-            height: 150px;
-            margin-left: auto;
-            margin-right: auto;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02), 0 15px 25px -10px rgba(0,0,0,0.1);
-        }
-
-        .product-card:hover .product-media {
-            transform: scale(1.03);
-        }
-
-        .product-emoji {
-            font-size: 5.2rem;
-            filter: drop-shadow(2px 8px 12px rgba(0,0,0,0.1));
-        }
-
-        .product-info {
-            text-align: center;
-        }
-
-        .product-title {
-            font-size: 1.9rem;
-            font-weight: 800;
-            color: #0b1f2e;
-            margin-bottom: 0.4rem;
-        }
-
-        .product-owner {
-            font-size: 1rem;
-            color: #5f7c9c;
-            font-weight: 500;
-            margin-bottom: 0.8rem;
-        }
-
-        .price-row {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 5px;
-            background: #ecf2f9;
-            padding: 0.35rem 1.3rem;
-            border-radius: 60px;
-            margin: 0.7rem 0 0.6rem;
-        }
-
-        .currency {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #2a6b2f;
-        }
-
-        .product-price {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #1f4a2c;
-        }
-
-        .badge-category {
-            display: inline-block;
-            margin-top: 0.7rem;
-            background: #e2e9f2;
-            padding: 0.3rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #2c5270;
-        }
-
-        .buy-now-btn {
-            margin-top: 1.2rem;
-            background: linear-gradient(135deg, #f7b42c, #fc575e);
-            border: none;
-            padding: 0.8rem 1.8rem;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            width: 80%;
-        }
-
-        .buy-now-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .card-glow {
-            position: absolute;
-            inset: 0;
-            border-radius: 56px;
-            background: radial-gradient(circle at 30% 20%, rgba(100,160,255,0.2), transparent 70%);
-            opacity: 0.4;
-            pointer-events: none;
-            transition: opacity 0.4s;
-        }
-
-        /* Navigation */
-        .nav-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .nav-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            border: none;
-            padding: 0.75rem 1.8rem;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-            color: #1f2a44;
-        }
-
-        .nav-btn:hover {
-            background: #1f2a44;
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        .product-counter {
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            padding: 0.5rem 1.2rem;
-            border-radius: 60px;
-            font-weight: 600;
-            color: white;
-            font-size: 1rem;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 48px;
-            max-width: 500px;
-            width: 90%;
-            padding: 2rem;
-            position: relative;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e2f44;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #999;
-            transition: 0.2s;
-        }
-
-        .close-modal:hover {
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 60px;
-            font-size: 1rem;
-            transition: 0.2s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #f7b42c;
-        }
-
-        .pay-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-            padding: 1rem;
-            border: none;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: 0.2s;
-        }
-
-        .pay-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(46,204,113,0.3);
-        }
-
-        /* Footer */
-        .main-footer {
-            background: linear-gradient(100deg, #0f2b3d 0%, #1a3a4f 100%);
-            color: #f0f3f8;
-            margin-top: 3rem;
-            padding: 2rem 1.5rem 1.5rem;
-            border-top: 1px solid rgba(255, 215, 120, 0.3);
-        }
-
-        .footer-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .footer-brand h3 {
-            font-size: 1.4rem;
-            background: linear-gradient(135deg, #FFE6B0, #FFD966);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: #FFE0A3;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .footer-links a:hover {
-            color: #FFC107;
-            transform: translateY(-2px);
-        }
-
-        .footer-copyright {
-            text-align: center;
-            margin-top: 1.8rem;
-            padding-top: 1.2rem;
-            border-top: 1px solid rgba(255, 215, 120, 0.2);
-            font-size: 0.75rem;
-        }
-
-        .dynamic-feedback {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e2f44;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            z-index: 999;
-            animation: fadeInUp 0.2s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        .card-transition {
-            animation: cardGlide 0.35s cubic-bezier(0.2, 0.85, 0.4, 1) forwards;
-        }
-
-        @keyframes cardGlide {
-            0% { opacity: 0; transform: scale(0.96) translateY(15px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @media (max-width: 550px) {
-            .product-title { font-size: 1.5rem; }
-            .product-price { font-size: 1.8rem; }
-            .card-inner { padding: 1.4rem; }
-        }
-    </style>
+    <title>MarketFlow | Premium Product Explorer with Checkout</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app-wrapper">
     <div class="app-container">
         <header class="brand-header">
             <div class="logo-area">
-                <span class="logo-icon"></span>
+                <span class="logo-icon">🛍️</span>
                 <h1>MarketFlow</h1>
+                <span class="wishlist-badge" id="wishlistCounter">❤️ 0</span>
             </div>
-            <p class="tagline">10+ premium picks per category · secure checkout</p>
+            <p class="tagline">36+ premium picks · Secure checkout · Smart filters</p>
         </header>
 
-        <div style="display: flex; justify-content: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
             <div class="stats-banner">
-                <div class="stat-item"><span class="stat-number" id="totalStat"></span> products</div>
-                <div class="stat-item"><span class="stat-number" id="categoryStat"></span> categories</div>
+                <div class="stat-item"><span class="stat-number" id="totalStat">0</span> products</div>
+                <div class="stat-item"><span class="stat-number" id="categoryStat">3</span> categories</div>
+                <div class="stat-item"><span class="stat-number" id="wishlistStat">0</span> wishlisted</div>
+            </div>
+            <div class="search-sort">
+                <input type="text" id="searchInput" placeholder="🔍 Search products..." class="search-input">
+                <select id="sortSelect" class="sort-select">
+                    <option value="default">Sort by: Featured</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="name-asc">Name: A to Z</option>
+                </select>
             </div>
         </div>
 
@@ -573,28 +43,32 @@
                 <span>Mega filter</span>
             </div>
             <div class="filter-group" id="filterGroup">
-                <button data-filter="all" class="filter-btn active-filter">All </button>
-                <button data-filter="electronics" class="filter-btn">Electronics </button>
-                <button data-filter="fashion" class="filter-btn">Fashion </button>
-                <button data-filter="home" class="filter-btn">Home & Living </button>
+                <button data-filter="all" class="filter-btn active-filter">All</button>
+                <button data-filter="electronics" class="filter-btn">Electronics</button>
+                <button data-filter="fashion" class="filter-btn">Fashion</button>
+                <button data-filter="home" class="filter-btn">Home & Living</button>
             </div>
         </aside>
 
         <main class="product-stage">
             <div class="product-card" id="productCard">
+                <button class="wishlist-btn" id="wishlistToggleBtn" title="Add to wishlist">❤️</button>
                 <div class="card-inner">
                     <div class="product-media">
                         <span class="product-emoji" id="productEmoji">🎧</span>
                     </div>
                     <div class="product-info">
                         <h2 class="product-title" id="productTitle">Loading...</h2>
-                        <p class="product-owner" id="productOwner">by <span id="ownerName">—</span></p>
+                        <p class="product-owner">by <span id="ownerName">—</span></p>
                         <div class="price-row">
                             <span class="currency">$</span>
                             <span class="product-price" id="productPrice">0</span>
                         </div>
                         <div class="badge-category" id="categoryBadge">—</div>
-                        <button class="buy-now-btn" id="buyNowBtn">Buy Now</button>
+                        <div class="rating" id="productRating">★★★★★</div>
+                        <button class="buy-now-btn" id="buyNowBtn">
+                            <span></span> Buy Now
+                        </button>
                     </div>
                 </div>
                 <div class="card-glow"></div>
@@ -617,7 +91,25 @@
                     </svg>
                 </button>
             </div>
+            
+            <!-- Quick View Section -->
+            <div class="quick-actions">
+                <button class="quick-view-btn" id="quickViewBtn">Quick Specs</button>
+            </div>
         </main>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quickViewModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <span>Product Specifications</span>
+                <button class="close-modal" onclick="closeQuickViewModal()">&times;</button>
+            </div>
+            <div id="quickViewContent" style="line-height: 1.8;">
+                <!-- dynamic specs -->
+            </div>
+        </div>
     </div>
 
     <!-- About Us Modal -->
@@ -630,22 +122,34 @@
             <div style="line-height: 1.6; color: #2c3e50;">
                 <p style="margin-bottom: 1rem;"><strong>MarketFlow</strong> is your premium destination for curated electronics, fashion, and home essentials.</p>
                 <p style="margin-bottom: 1rem;">Founded in 2025, we bring you 36+ handpicked products across 3 categories — each item tested for quality and style.</p>
-                <p style="margin-bottom: 1rem;">Our mission: seamless shopping experience with next/previous navigation, real-time filters, and secure card payments.</p>
+                <p style="margin-bottom: 1rem;"><strong>New Features:</strong> Wishlist, Product Search, Sorting, Quick Specs, and animated feedback!</p>
                 <p>Crafted with passion for modern explorers.</p>
             </div>
         </div>
     </div>
 
-    <!-- Buy / Checkout Modal -->
+    <!-- Wishlist Modal -->
+    <div id="wishlistModal" class="modal">
+        <div class="modal-content modal-wishlist">
+            <div class="modal-header">
+                <span>❤️ Your Wishlist</span>
+                <button class="close-modal" onclick="closeWishlistModal()">&times;</button>
+            </div>
+            <div id="wishlistItems" style="max-height: 400px; overflow-y: auto;">
+                <p style="text-align: center; color: #888;">Your wishlist is empty</p>
+            </div>
+            <button class="clear-wishlist-btn" id="clearWishlistBtn">Clear All</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span> Complete Your Purchase</span>
+                <span>Complete Your Purchase</span>
                 <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
             </div>
-            <div id="checkoutProductInfo" style="background: #f0f4fa; padding: 0.8rem; border-radius: 20px; margin-bottom: 1rem; text-align: center;">
-                <!-- dynamic product info appears here -->
-            </div>
+            <div id="checkoutProductInfo" style="background: #f0f4fa; padding: 0.8rem; border-radius: 20px; margin-bottom: 1rem; text-align: center;"></div>
             <form id="paymentForm">
                 <div class="form-group">
                     <label>Full Name</label>
@@ -655,13 +159,15 @@
                     <label>Card Number</label>
                     <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
                 </div>
-                <div class="form-group">
-                    <label>Expiry Date (MM/YY)</label>
-                    <input type="text" id="expiry" placeholder="12/28" required>
-                </div>
-                <div class="form-group">
-                    <label>CVV</label>
-                    <input type="password" id="cvv" placeholder="123" maxlength="4" required>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Expiry (MM/YY)</label>
+                        <input type="text" id="expiry" placeholder="12/28" required>
+                    </div>
+                    <div class="form-group half">
+                        <label>CVV</label>
+                        <input type="password" id="cvv" placeholder="123" maxlength="4" required>
+                    </div>
                 </div>
                 <button type="submit" class="pay-btn">✅ Pay Now</button>
             </form>
@@ -671,201 +177,22 @@
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <span class="logo-icon-small" style="font-size:1.8rem;">🛍️</span>
+                <span style="font-size:1.8rem;">🛍️</span>
                 <h3>MarketFlow</h3>
             </div>
             <div class="footer-links">
                 <a id="aboutUsLink">About Us</a>
-                <a href="#">Products</a>
+                <a id="wishlistLink">Wishlist</a>
                 <a href="#">Support</a>
                 <a href="#">Privacy</a>
             </div>
         </div>
         <div class="footer-copyright">
-            © 2025 MarketFlow — Secure Payments | Next/Prev · Real-time Filters
+            © 2025 MarketFlow — Secure Payments | Filters · Search · Wishlist · Quick Specs
         </div>
     </footer>
 </div>
 
-<script>
-    // ---------- 36 PRODUCTS (12 per category) ----------
-    const productsCatalog = [
-        { id: 1, title: "Aether Wireless Buds Pro", owner: "SoundScape", price: 89.99, category: "electronics", emoji: "🎧", categoryLabel: "Electronics" },
-        { id: 2, title: "Chrono Core Smartwatch", owner: "ChronoCore", price: 149.00, category: "electronics", emoji: "⌚", categoryLabel: "Electronics" },
-        { id: 3, title: "Noise-X ANC Headphones", owner: "AudioCraft", price: 79.99, category: "electronics", emoji: "🎧", categoryLabel: "Electronics" },
-        { id: 4, title: "Lumina 4K Drone", owner: "SkyView Labs", price: 399.00, category: "electronics", emoji: "🚁", categoryLabel: "Electronics" },
-        { id: 5, title: "MagSafe Power Bank", owner: "ChargeTech", price: 45.99, category: "electronics", emoji: "🔋", categoryLabel: "Electronics" },
-        { id: 6, title: "HyperX Gaming Keyboard", owner: "PulseGear", price: 129.99, category: "electronics", emoji: "⌨️", categoryLabel: "Electronics" },
-        { id: 7, title: "StreamCam 4K", owner: "VisionEdge", price: 199.00, category: "electronics", emoji: "📸", categoryLabel: "Electronics" },
-        { id: 8, title: "Portable SSD 1TB", owner: "DataCore", price: 119.00, category: "electronics", emoji: "💾", categoryLabel: "Electronics" },
-        { id: 9, title: "Smart LED Bulb Kit", owner: "LumeLife", price: 34.99, category: "electronics", emoji: "💡", categoryLabel: "Electronics" },
-        { id: 10, title: "Tablet Stylus Pro", owner: "Artisan Digits", price: 59.00, category: "electronics", emoji: "✏️", categoryLabel: "Electronics" },
-        { id: 11, title: "WiFi Mesh Router", owner: "NetSphere", price: 189.99, category: "electronics", emoji: "📡", categoryLabel: "Electronics" },
-        { id: 12, title: "VR Headset Explorer", owner: "VirtualX", price: 299.99, category: "electronics", emoji: "🥽", categoryLabel: "Electronics" },
-        { id: 13, title: "Urban Drift Jacket", owner: "Nomad Atlas", price: 119.50, category: "fashion", emoji: "🧥", categoryLabel: "Fashion" },
-        { id: 14, title: "Silk Camisole Set", owner: "Luna Studio", price: 59.99, category: "fashion", emoji: "👚", categoryLabel: "Fashion" },
-        { id: 15, title: "Retro High Sneakers", owner: "StrideLab", price: 94.95, category: "fashion", emoji: "👟", categoryLabel: "Fashion" },
-        { id: 16, title: "Minimalist Backpack", owner: "Urban Vow", price: 79.00, category: "fashion", emoji: "🎒", categoryLabel: "Fashion" },
-        { id: 17, title: "Wool Blend Overcoat", owner: "Elegance Atelier", price: 189.00, category: "fashion", emoji: "🧥", categoryLabel: "Fashion" },
-        { id: 18, title: "Leather Crossbody Bag", owner: "Rogue Leather", price: 69.99, category: "fashion", emoji: "👜", categoryLabel: "Fashion" },
-        { id: 19, title: "Aviator Sunglasses", owner: "SolarShade", price: 49.00, category: "fashion", emoji: "🕶️", categoryLabel: "Fashion" },
-        { id: 20, title: "Cashmere Beanie", owner: "WarmCraft", price: 34.99, category: "fashion", emoji: "🧣", categoryLabel: "Fashion" },
-        { id: 21, title: "Denim Cargo Pants", owner: "Denim Society", price: 89.00, category: "fashion", emoji: "👖", categoryLabel: "Fashion" },
-        { id: 22, title: "Running Shorts 2.0", owner: "ActiveCore", price: 29.99, category: "fashion", emoji: "🏃", categoryLabel: "Fashion" },
-        { id: 23, title: "Silk Scarf", owner: "LuxeSilk", price: 45.00, category: "fashion", emoji: "🧣", categoryLabel: "Fashion" },
-        { id: 24, title: "Leather Chelsea Boots", owner: "BootMaster", price: 159.00, category: "fashion", emoji: "👢", categoryLabel: "Fashion" },
-        { id: 25, title: "Zenith Floor Lamp", owner: "ModerNest", price: 199.00, category: "home", emoji: "💡", categoryLabel: "Home & Living" },
-        { id: 26, title: "Marble Coffee Table", owner: "Artisan Grove", price: 299.00, category: "home", emoji: "🪑", categoryLabel: "Home & Living" },
-        { id: 27, title: "Aromatherapy Diffuser", owner: "PureAtmos", price: 44.99, category: "home", emoji: "🕯️", categoryLabel: "Home & Living" },
-        { id: 28, title: "Velvet Throw Pillow", owner: "CozyNest", price: 29.99, category: "home", emoji: "🛋️", categoryLabel: "Home & Living" },
-        { id: 29, title: "Ceramic Plant Pot Set", owner: "GreenSpaces", price: 39.00, category: "home", emoji: "🌿", categoryLabel: "Home & Living" },
-        { id: 30, title: "Bamboo Cutting Board", owner: "KitchenArt", price: 34.99, category: "home", emoji: "🍳", categoryLabel: "Home & Living" },
-        { id: 31, title: "Smart Air Purifier", owner: "PureBreeze", price: 159.99, category: "home", emoji: "🌬️", categoryLabel: "Home & Living" },
-        { id: 32, title: "Organic Cotton Sheets", owner: "SleepHaven", price: 89.00, category: "home", emoji: "🛏️", categoryLabel: "Home & Living" },
-        { id: 33, title: "Nordic Bookshelf", owner: "WoodCrafted", price: 129.00, category: "home", emoji: "📚", categoryLabel: "Home & Living" },
-        { id: 34, title: "Stainless Steel Kettle", owner: "HomeBarista", price: 49.99, category: "home", emoji: "☕", categoryLabel: "Home & Living" },
-        { id: 35, title: "Boho Wall Mirror", owner: "DecoVibe", price: 79.00, category: "home", emoji: "🪞", categoryLabel: "Home & Living" },
-        { id: 36, title: "Scented Candle Set", owner: "AmberGlow", price: 27.99, category: "home", emoji: "🕯️", categoryLabel: "Home & Living" }
-    ];
-
-    let activeFilter = "all";
-    let filteredProducts = [...productsCatalog];
-    let currentIndex = 0;
-    let currentProductForCheckout = null;
-
-    // DOM elements
-    const productTitleEl = document.getElementById("productTitle");
-    const ownerNameSpan = document.getElementById("ownerName");
-    const productPriceSpan = document.getElementById("productPrice");
-    const categoryBadge = document.getElementById("categoryBadge");
-    const productEmojiSpan = document.getElementById("productEmoji");
-    const currentIdxSpan = document.getElementById("currentIdx");
-    const totalCountSpan = document.getElementById("totalCount");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const productCard = document.getElementById("productCard");
-    const buyNowBtn = document.getElementById("buyNowBtn");
-
-    function showFeedback(msg) {
-        let existing = document.querySelector(".dynamic-feedback");
-        if (existing) existing.remove();
-        const div = document.createElement("div");
-        div.className = "dynamic-feedback";
-        div.innerText = msg;
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 2000);
-    }
-
-    function updateProductDisplay() {
-        if (!filteredProducts.length) {
-            productTitleEl.innerText = "No products";
-            ownerNameSpan.innerText = "—";
-            productPriceSpan.innerText = "0.00";
-            categoryBadge.innerText = "none";
-            productEmojiSpan.innerText = "🔍";
-            currentIdxSpan.innerText = "0";
-            totalCountSpan.innerText = "0";
-            return;
-        }
-        if (currentIndex >= filteredProducts.length) currentIndex = filteredProducts.length - 1;
-        if (currentIndex < 0) currentIndex = 0;
-        const p = filteredProducts[currentIndex];
-        productTitleEl.innerText = p.title;
-        ownerNameSpan.innerText = p.owner;
-        productPriceSpan.innerText = p.price.toFixed(2);
-        categoryBadge.innerText = p.categoryLabel;
-        productEmojiSpan.innerText = p.emoji;
-        currentIdxSpan.innerText = currentIndex + 1;
-        totalCountSpan.innerText = filteredProducts.length;
-        productCard.classList.remove("card-transition");
-        void productCard.offsetWidth;
-        productCard.classList.add("card-transition");
-        setTimeout(() => productCard.classList.remove("card-transition"), 360);
-    }
-
-    function applyFilterAndRefresh() {
-        if (activeFilter === "all") filteredProducts = [...productsCatalog];
-        else filteredProducts = productsCatalog.filter(p => p.category === activeFilter);
-        currentIndex = filteredProducts.length > 0 ? 0 : -1;
-        updateProductDisplay();
-        document.querySelectorAll(".filter-btn").forEach(btn => {
-            if (btn.getAttribute("data-filter") === activeFilter) btn.classList.add("active-filter");
-            else btn.classList.remove("active-filter");
-        });
-    }
-
-    function nextProduct() { if (filteredProducts.length) { currentIndex = (currentIndex + 1) % filteredProducts.length; updateProductDisplay(); } }
-    function prevProduct() { if (filteredProducts.length) { currentIndex = (currentIndex - 1 + filteredProducts.length) % filteredProducts.length; updateProductDisplay(); } }
-
-    // Modal Functions
-    const aboutModal = document.getElementById("aboutModal");
-    const checkoutModal = document.getElementById("checkoutModal");
-
-    window.openAboutModal = () => { aboutModal.style.display = "flex"; };
-    window.closeAboutModal = () => { aboutModal.style.display = "none"; };
-    window.closeCheckoutModal = () => { checkoutModal.style.display = "none"; };
-
-    function openCheckoutModal() {
-        if (!filteredProducts.length || currentIndex < 0) return;
-        currentProductForCheckout = filteredProducts[currentIndex];
-        const infoDiv = document.getElementById("checkoutProductInfo");
-        infoDiv.innerHTML = `
-            <strong>🛍️ ${currentProductForCheckout.title}</strong><br>
-            by ${currentProductForCheckout.owner}<br>
-            <span style="font-size: 1.5rem; color:#2a6b2f;">$${currentProductForCheckout.price.toFixed(2)}</span>
-        `;
-        checkoutModal.style.display = "flex";
-        document.getElementById("paymentForm").reset();
-    }
-
-    // Payment Handler
-    document.getElementById("paymentForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("fullName").value.trim();
-        const card = document.getElementById("cardNumber").value.trim();
-        const expiry = document.getElementById("expiry").value.trim();
-        const cvv = document.getElementById("cvv").value.trim();
-        
-        if (!name || !card || !expiry || !cvv) {
-            showFeedback("❌ Please fill all payment details");
-            return;
-        }
-        if (card.replace(/\s/g, '').length < 15) {
-            showFeedback("❌ Invalid card number");
-            return;
-        }
-        showFeedback(`✅ Payment successful! Thank you ${name}, you purchased "${currentProductForCheckout.title}"`);
-        checkoutModal.style.display = "none";
-        document.getElementById("paymentForm").reset();
-    });
-
-    // Format card input
-    document.getElementById("cardNumber").addEventListener("input", function(e) {
-        let val = e.target.value.replace(/\s/g, '');
-        if (val.length > 16) val = val.slice(0,16);
-        let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-        e.target.value = formatted;
-    });
-
-    // Event binding
-    function init() {
-        document.getElementById("totalStat").innerText = productsCatalog.length;
-        document.getElementById("categoryStat").innerText = "3";
-        document.querySelectorAll(".filter-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                activeFilter = btn.getAttribute("data-filter");
-                applyFilterAndRefresh();
-                showFeedback(`✨ showing ${filteredProducts.length} items`);
-            });
-        });
-        prevBtn.addEventListener("click", prevProduct);
-        nextBtn.addEventListener("click", nextProduct);
-        buyNowBtn.addEventListener("click", openCheckoutModal);
-        document.getElementById("aboutUsLink").addEventListener("click", openAboutModal);
-        window.onclick = (e) => { if (e.target === aboutModal) aboutModal.style.display = "none"; if (e.target === checkoutModal) checkoutModal.style.display = "none"; };
-        applyFilterAndRefresh();
-    }
-    init();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
